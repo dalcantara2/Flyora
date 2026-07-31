@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Flyora — Find Your Flight{% endblock %}
+
+{% block content %}
+
+<!-- =========================================================================
+     HERO SECTION
+     ========================================================================= -->
+<section class="hero">
+    <div class="hero__overlay"></div>
+    <div class="hero__content container">
+        <h1 class="hero__title">Where do you want to go?</h1>
+        <p class="hero__subtitle">Search hundreds of flights and book your next adventure in seconds.</p>
+
+        <!-- ==================================================================
+             SEARCH FORM
+             "From" and "To" use a custom autocomplete combobox (airport-input)
+             so users can type a city name or IATA code and pick from a list.
+             The hidden inputs carry the resolved value to the server.
+             ================================================================== -->
+        <form class="search-form" action="/search" method="POST" id="search-form">
+
+            <div class="search-form__grid">
+
+                <!-- Departure city — autocomplete combobox -->
+                <div class="form-group">
+                    <label class="form-label" for="origin-display">From</label>
+                    <div class="airport-input" id="origin-combobox">
+                        <input
+                            class="form-input airport-input__field"
+                            type="text"
+                            id="origin-display"
+                            placeholder="City or airport code"
+                            autocomplete="off"
+                            aria-label="Departure city or airport"
+                            aria-autocomplete="list"
+                            aria-controls="origin-listbox"
+                            aria-expanded="false"
+                            role="combobox"
+                        />
+                        <!-- Hidden field carries the resolved city name to the server -->
+                        <input type="hidden" id="origin" name="origin" required />
+                        <ul
+                            class="airport-input__dropdown"
+                            id="origin-listbox"
+                            role="listbox"
+                            aria-label="Departure city suggestions"
+                            hidden
+                        ></ul>
+                    </div>
+                </div>
+
+                <!-- Destination city — autocomplete combobox -->
+                <div class="form-group">
+                    <label class="form-label" for="destination-display">To</label>
+                    <div class="airport-input" id="destination-combobox">
+                        <input
+                            class="form-input airport-input__field"
+                            type="text"
+                            id="destination-display"
+                            placeholder="City or airport code"
+                            autocomplete="off"
+                            aria-label="Destination city or airport"
+                            aria-autocomplete="list"
+                            aria-controls="destination-listbox"
+                            aria-expanded="false"
+                            role="combobox"
+                        />
+                        <input type="hidden" id="destination" name="destination" required />
+                        <ul
+                            class="airport-input__dropdown"
+                            id="destination-listbox"
+                            role="listbox"
+                            aria-label="Destination city suggestions"
+                            hidden
+                        ></ul>
+                    </div>
+                </div>
+
+                <!-- Departure date -->
+                <div class="form-group">
+                    <label class="form-label" for="date">Date</label>
+                    <input
+                        class="form-input"
+                        type="date"
+                        id="date"
+                        name="date"
+                        required
+                    />
+                </div>
+
+                <!-- Submit -->
+                <div class="form-group form-group--submit">
+                    <button class="btn btn--primary btn--large" type="submit">
+                        Search Flights
+                    </button>
+                </div>
+
+            </div><!-- /.search-form__grid -->
+
+            <!-- Inline validation message for same-city selection -->
+            <p class="search-form__error" id="search-form-error" hidden></p>
+
+        </form>
+
+    </div><!-- /.hero__content -->
+</section>
+
+
+<!-- =========================================================================
+     WHY FLYORA — Feature highlights
+     ========================================================================= -->
+<section class="features container">
+    <h2 class="features__heading">Why fly with Flyora?</h2>
+
+    <div class="features__grid">
+
+        <div class="feature-card">
+            <div class="feature-card__icon">🔍</div>
+            <h3 class="feature-card__title">Easy Search</h3>
+            <p class="feature-card__text">Find flights by city and date in one simple search.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-card__icon">⚡</div>
+            <h3 class="feature-card__title">Instant Booking</h3>
+            <p class="feature-card__text">Secure your seat in under a minute with our streamlined booking flow.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-card__icon">🧳</div>
+            <h3 class="feature-card__title">Smart Travel Assistant</h3>
+            <p class="feature-card__text">Receive a personalised packing checklist tailored to your trip after booking.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-card__icon">📋</div>
+            <h3 class="feature-card__title">Booking Lookup</h3>
+            <p class="feature-card__text">Retrieve your confirmation and checklist any time using your booking reference.</p>
+        </div>
+
+    </div><!-- /.features__grid -->
+</section>
+
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Flyora — Find My Booking{% endblock %}
+
+{% block content %}
+<div class="container page-section page-section--narrow">
+
+    <h1 class="page-title">Find My Booking</h1>
+    <p class="page-subtitle">Enter your booking reference to view your confirmation and travel checklist.</p>
+
+    <!--
+        Phase 4 will wire this form to the POST /lookup route.
+        The form is present now so styles can be tested.
+    -->
+    <form class="lookup-form" action="/lookup" method="POST" id="lookup-form">
+
+        <div class="form-group">
+            <label class="form-label" for="booking_reference">Booking Reference</label>
+            <input
+                class="form-input"
+                type="text"
+                id="booking_reference"
+                name="booking_reference"
+                placeholder="e.g. SKY-4821-AB"
+                required
+            />
+        </div>
+
+        <button class="btn btn--primary" type="submit">Find Booking</button>
+
+    </form>
+
+</div>
+{% endblock %}

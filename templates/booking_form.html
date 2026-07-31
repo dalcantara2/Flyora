@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Flyora — Book {{ flight.flight_number }}{% endblock %}
+
+{% block content %}
+<div class="container page-section">
+
+    <!-- =====================================================================
+         SELECTED FLIGHT SUMMARY CARD
+         ===================================================================== -->
+    <div class="flight-summary-card">
+        <div class="flight-summary-card__header">
+            <span class="flight-summary-card__label">Your selected flight</span>
+            <a href="{{ url_for('index') }}" class="flight-summary-card__change">Change flight</a>
+        </div>
+
+        <div class="flight-summary-card__body">
+            <div class="flight-summary-card__route">
+                <div class="flight-summary-card__city-block">
+                    <span class="flight-summary-card__time">{{ flight.departure_time }}</span>
+                    <span class="flight-summary-card__city">{{ flight.origin_city }}</span>
+                </div>
+                <div class="flight-summary-card__middle">
+                    <span class="flight-summary-card__duration">
+                        {{ format_duration(flight.duration_minutes) }}
+                    </span>
+                    <div class="flight-card__duration-line">
+                        <span class="flight-card__dot"></span>
+                        <span class="flight-card__line"></span>
+                        <span class="flight-card__plane-icon">✈</span>
+                        <span class="flight-card__line"></span>
+                        <span class="flight-card__dot"></span>
+                    </div>
+                    <span class="flight-summary-card__nonstop">Nonstop</span>
+                </div>
+                <div class="flight-summary-card__city-block flight-summary-card__city-block--right">
+                    <span class="flight-summary-card__time">{{ flight.arrival_time }}</span>
+                    <span class="flight-summary-card__city">{{ flight.destination_city }}</span>
+                </div>
+            </div>
+            <div class="flight-summary-card__meta">
+                <span>{{ flight.airline }}</span>
+                <span>·</span>
+                <span>{{ flight.flight_number }}</span>
+                <span>·</span>
+                <span>{{ flight.aircraft_type }}</span>
+                <span>·</span>
+                <span>{{ flight.departure_date | format_date }}</span>
+            </div>
+        </div>
+
+        <div class="flight-summary-card__price-row">
+            <span class="flight-summary-card__price-label">Price per person</span>
+            <span class="flight-summary-card__price">${{ "%.2f" | format(flight.price) }}</span>
+        </div>
+    </div>
+
+
+    <!-- =====================================================================
+         BOOKING FORM
+         ===================================================================== -->
+    <form class="booking-form"
+          action="{{ url_for('create_booking_route', flight_id=flight.id) }}"
+          method="POST"
+          id="booking-form"
+          novalidate>
+
+        <!-- ── Passenger details ─────────────────────────────────────── -->
+        <h2 class="booking-section-title">Passenger Details</h2>
+
+        <div class="booking-form__row">
+            <div class="form-group">
+                <label class="form-label form-label--dark" for="passenger_name">
+                    Full Name <span class="form-required">*</span>
+                </label>
+                <input class="form-input form-input--light"
+                       type="text" id="passenger_name" name="passenger_name"
+                       placeholder="e.g. Jane Smith" required autocomplete="name" />
+            </div>
+            <div class="form-group">
+                <label class="form-label form-label--dark" for="passenger_email">
+                    Email Address <span class="form-required">*</span>
+                </label>
+                <input class="form-input form-input--light"
+                       type="email" id="passenger_email" name="passenger_email"
+                       placeholder="e.g. jane@email.com" required autocomplete="email" />
+            </div>
+        </div>
+
+        <div class="booking-form__row">
+            <div class="form-group">
+                <label class="form-label form-label--dark" for="passenger_phone">
+                    Phone Number <span class="form-required">*</span>
+                </label>
+                <input class="form-input form-input--light"
+                       type="tel" id="passenger_phone" name="passenger_phone"
+                       placeholder="e.g. +1 555 000 1234" required autocomplete="tel" />
+            </div>
+            <div class="form-group">
+                <label class="form-label form-label--dark" for="trip_purpose">
+                    Trip Purpose
+                    <span class="form-hint-inline">— used for your travel checklist</span>
+                </label>
+                <select class="form-input form-input--light"
+                        id="trip_purpose" name="trip_purpose">
+                    <option value="Leisure"  selected>Leisure</option>
+                    <option value="Business">Business</option>
+                    <option value="Family">Family</option>
+                </select>
+            </div>
+        </div>
+
+
+        <!-- ── Seat selection ────────────────────────────────────────── -->
+        <h2 class="booking-section-title" style="margin-top:2rem;">Select Your Seat</h2>
+        <p class="seat-map-intro">
+            Click an available seat to select it.
+            Each booking reserves one seat.
+        </p>
+
+        <!-- Hidden field — populated by JS when user clicks a seat -->
+        <input type="hidden" id="selected_seat" name="selected_seat" value="" />
+
+        <!-- ── Seat map wrapper ──────────────────────────────────────── -->
+        <div class="seat-map-wrapper">
+
+            <!-- Cabin silhouette -->
+            <div class="cabin">
+
+                <!-- Cockpit nose -->
+                <div class="cabin__nose">
+                    <div class="cabin__nose-label">🛫 Cockpit — Front of Aircraft</div>
+                </div>
+
+                <!-- Column headers  A B C  [aisle]  D E F -->
+                <div class="cabin__col-headers">
+                    <div class="cabin__col-header">A</div>
+                    <div class="cabin__col-header">B</div>
+                    <div class="cabin__col-header">C</div>
+                    <div class="cabin__col-header cabin__col-header--aisle"></div>
+                    <div class="cabin__col-header">D</div>
+                    <div class="cabin__col-header">E</div>
+                    <div class="cabin__col-header">F</div>
+                </div>
+
+                <!-- Seat rows 1 – 12 -->
+                <div class="cabin__rows" id="seat-rows"
+                     data-booked="{{ booked_seats }}"
+                     data-exit-row="{{ exit_row }}">
+                    {# Rows are rendered by JS — see initSeatMap() in main.js #}
+                </div>
+
+                <!-- Rear of cabin -->
+                <div class="cabin__rear">
+                    <div class="cabin__rear-label">🚻 Lavatories · 🚪 Rear Exit</div>
+                </div>
+
+            </div><!-- /.cabin -->
+
+
+            <!-- ── Seat selection summary panel ─────────────────────── -->
+            <div class="seat-summary" id="seat-summary">
+                <div class="seat-summary__icon">💺</div>
+                <p class="seat-summary__prompt" id="seat-summary-prompt">
+                    No seat selected
+                </p>
+                <div class="seat-summary__detail" id="seat-summary-detail" hidden>
+                    <div class="seat-summary__badge" id="seat-summary-badge"></div>
+                    <dl class="seat-summary__dl">
+                        <dt>Type</dt>
+                        <dd id="seat-summary-type"></dd>
+                        <dt>Position</dt>
+                        <dd id="seat-summary-position"></dd>
+                    </dl>
+                </div>
+            </div>
+
+        </div><!-- /.seat-map-wrapper -->
+
+
+        <!-- ── Seat map legend ───────────────────────────────────────── -->
+        <div class="seat-legend">
+            <div class="seat-legend__item">
+                <span class="seat-legend__swatch seat-legend__swatch--available"></span>
+                Available
+            </div>
+            <div class="seat-legend__item">
+                <span class="seat-legend__swatch seat-legend__swatch--selected"></span>
+                Selected
+            </div>
+            <div class="seat-legend__item">
+                <span class="seat-legend__swatch seat-legend__swatch--occupied"></span>
+                Occupied
+            </div>
+            <div class="seat-legend__item">
+                <span class="seat-legend__swatch seat-legend__swatch--exit"></span>
+                Exit Row
+            </div>
+        </div>
+
+
+        <!-- ── Price summary ─────────────────────────────────────────── -->
+        <div class="booking-price-summary">
+            <span class="booking-price-summary__label">Total — 1 Passenger</span>
+            <span class="booking-price-summary__value">
+                ${{ "%.2f" | format(flight.price) }}
+            </span>
+        </div>
+
+
+        <!-- ── Actions ───────────────────────────────────────────────── -->
+        <div class="booking-form__actions">
+            <a href="{{ url_for('index') }}" class="btn btn--secondary">Cancel</a>
+            <button class="btn btn--primary btn--large" type="submit"
+                    id="confirm-btn" disabled>
+                Confirm Booking
+            </button>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

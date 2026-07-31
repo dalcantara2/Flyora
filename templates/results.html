@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Flyora — {{ origin }} to {{ destination }}{% endblock %}
+
+{% block content %}
+<div class="container page-section">
+
+    <!-- =====================================================================
+         PAGE HEADER
+         ===================================================================== -->
+    <div class="results-header">
+        <div>
+            <h1 class="page-title">
+                {{ origin }} <span class="results-header__arrow">→</span> {{ destination }}
+            </h1>
+            <p class="page-subtitle">
+                {% if flights and not is_alternative %}
+                    {{ flights | length }} flight{{ 's' if flights | length != 1 }} found
+                    for <strong>{{ date | format_date }}</strong>
+                {% elif flights and is_alternative %}
+                    Showing next available flights for this route
+                {% else %}
+                    No flights available for <strong>{{ date | format_date }}</strong>
+                {% endif %}
+            </p>
+        </div>
+        <a href="{{ url_for('index') }}" class="btn btn--secondary">← New Search</a>
+    </div>
+
+
+    <!-- =====================================================================
+         ALTERNATIVE DATE BANNER
+         Shown only when the exact date had no matches but the route exists.
+         ===================================================================== -->
+    {% if is_alternative and flights %}
+    <div class="alt-date-banner">
+        <span class="alt-date-banner__icon">📅</span>
+        <div class="alt-date-banner__text">
+            <strong>No flights were available on {{ date | format_date }}.</strong>
+            Here are the next available options for this route — departing
+            <strong>{{ alt_date | format_date }}</strong>.
+        </div>
+    </div>
+    {% endif %}
+
+
+    <!-- =====================================================================
+         FLIGHT RESULTS
+         ===================================================================== -->
+    {% if flights %}
+
+        <div class="results-list">
+            {% for flight in flights %}
+            <div class="flight-card">
+
+                <!-- Left: route + times -->
+                <div class="flight-card__main">
+
+                    <div class="flight-card__airline">
+                        <span class="flight-card__airline-name">{{ flight.airline }}</span>
+                        <span class="flight-card__number">{{ flight.flight_number }}</span>
+                        <span class="flight-card__aircraft">· {{ flight.aircraft_type }}</span>
+                        {# Show the actual departure date on each card when showing alternatives,
+                           so it's clear which date each flight departs on. #}
+                        {% if is_alternative %}
+                        <span class="flight-card__date-badge">
+                            {{ flight.departure_date | format_date }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="flight-card__route">
+                        <div class="flight-card__time-block">
+                            <span class="flight-card__time">{{ flight.departure_time }}</span>
+                            <span class="flight-card__city">{{ flight.origin_city }}</span>
+                        </div>
+
+                        <div class="flight-card__duration-block">
+                            <span class="flight-card__duration-label">
+                                {{ format_duration(flight.duration_minutes) }}
+                            </span>
+                            <div class="flight-card__duration-line">
+                                <span class="flight-card__dot"></span>
+                                <span class="flight-card__line"></span>
+                                <span class="flight-card__plane-icon">✈</span>
+                                <span class="flight-card__line"></span>
+                                <span class="flight-card__dot"></span>
+                            </div>
+                            <span class="flight-card__nonstop">Nonstop</span>
+                        </div>
+
+                        <div class="flight-card__time-block flight-card__time-block--right">
+                            <span class="flight-card__time">{{ flight.arrival_time }}</span>
+                            <span class="flight-card__city">{{ flight.destination_city }}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right: price + seats + CTA -->
+                <div class="flight-card__aside">
+                    <div class="flight-card__price">${{ "%.2f" | format(flight.price) }}</div>
+                    <div class="flight-card__price-label">per person</div>
+
+                    <div class="flight-card__seats
+                        {%- if flight.seats_available <= 5 %} flight-card__seats--low{% endif %}">
+                        {% if flight.seats_available <= 5 %}
+                            ⚠ Only {{ flight.seats_available }} seat{{ 's' if flight.seats_available != 1 }} left
+                        {% else %}
+                            {{ flight.seats_available }} seats available
+                        {% endif %}
+                    </div>
+
+                    <a href="{{ url_for('booking_form', flight_id=flight.id) }}"
+                       class="btn btn--primary btn--block">
+                        Book Now
+                    </a>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div><!-- /.results-list -->
+
+
+    {% else %}
+    <!-- =====================================================================
+         NO RESULTS — route does not exist in the database at all
+         ===================================================================== -->
+    <div class="no-results">
+        <div class="no-results__icon">🔍</div>
+        <h2 class="no-results__title">No flights found</h2>
+        <p class="no-results__text">
+            We couldn't find any available flights from
+            <strong>{{ origin }}</strong> to <strong>{{ destination }}</strong>.
+        </p>
+        <ul class="no-results__tips">
+            <li>Check that both city names are spelled correctly</li>
+            <li>Try using common airport codes: JFK, LAX, LHR, ORD, MIA</li>
+            <li>Example routes: New York → Los Angeles, Chicago → Paris</li>
+        </ul>
+        <a href="{{ url_for('index') }}" class="btn btn--primary">← Try Another Search</a>
+    </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}

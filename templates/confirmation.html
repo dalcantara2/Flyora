@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Flyora — Booking Confirmed · {{ booking.booking_reference }}{% endblock %}
+
+{% block content %}
+<div class="container page-section">
+
+    <!-- =====================================================================
+         CONFIRMATION BANNER — Digital Boarding Pass Style
+         ===================================================================== -->
+    <div class="confirmation-banner">
+        <div class="confirmation-banner__main">
+            <span class="confirmation-banner__icon">✅</span>
+            <h1 class="confirmation-banner__title">Boarding Pass</h1>
+            <p class="confirmation-banner__ref">
+                {{ booking.booking_reference }}
+            </p>
+            <p class="confirmation-banner__note">
+                Save this reference — you'll need it to look up your booking.
+            </p>
+        </div>
+        <div class="confirmation-banner__qr">
+            <div class="confirmation-banner__qr-code">
+                {{ booking.booking_reference }}
+            </div>
+            <div class="confirmation-banner__qr-label">Scan to Check In</div>
+        </div>
+    </div>
+
+
+    <!-- =====================================================================
+         FLIGHT DETAILS CARD
+         ===================================================================== -->
+    <div class="booking-detail-card">
+        <h2 class="booking-detail-card__heading">✈ Flight Details</h2>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Route</span>
+            <span class="booking-detail-row__value">
+                {{ booking.origin_city }} → {{ booking.destination_city }}
+            </span>
+        </div>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Date</span>
+            <span class="booking-detail-row__value">
+                {{ booking.departure_date | format_date }}
+            </span>
+        </div>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Departure</span>
+            <span class="booking-detail-row__value">{{ booking.departure_time }}</span>
+        </div>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Arrival</span>
+            <span class="booking-detail-row__value">{{ booking.arrival_time }}</span>
+        </div>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Duration</span>
+            <span class="booking-detail-row__value">
+                {{ format_duration(booking.duration_minutes) }}
+            </span>
+        </div>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Airline</span>
+            <span class="booking-detail-row__value">{{ booking.airline }}</span>
+        </div>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Flight Number</span>
+            <span class="booking-detail-row__value">{{ booking.flight_number }}</span>
+        </div>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Aircraft</span>
+            <span class="booking-detail-row__value">{{ booking.aircraft_type }}</span>
+        </div>
+    </div>
+
+
+    <!-- =====================================================================
+         PASSENGER DETAILS CARD
+         ===================================================================== -->
+    <div class="booking-detail-card">
+        <h2 class="booking-detail-card__heading">👤 Passenger Details</h2>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Name</span>
+            <span class="booking-detail-row__value">{{ booking.passenger_name }}</span>
+        </div>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Email</span>
+            <span class="booking-detail-row__value">{{ booking.passenger_email }}</span>
+        </div>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Phone</span>
+            <span class="booking-detail-row__value">{{ booking.passenger_phone }}</span>
+        </div>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Seat</span>
+            <span class="booking-detail-row__value booking-detail-row__value--seat">
+                {% if booking.selected_seat %}
+                    {{ booking.selected_seat }}
+                    <span class="seat-badge-inline">{{ booking.seat_preference }}</span>
+                {% else %}
+                    —
+                {% endif %}
+            </span>
+        </div>
+
+        <div class="booking-detail-row">
+            <span class="booking-detail-row__label">Trip Purpose</span>
+            <span class="booking-detail-row__value">{{ booking.trip_purpose }}</span>
+        </div>
+
+        <div class="booking-detail-row booking-detail-row--total">
+            <span class="booking-detail-row__label">Total Paid</span>
+            <span class="booking-detail-row__value booking-detail-row__value--price">
+                ${{ "%.2f" | format(booking.total_price) }}
+            </span>
+        </div>
+    </div>
+
+
+    <!-- =====================================================================
+         SMART TRAVEL ASSISTANT CHECKLIST  — Phase 3 placeholder
+         ===================================================================== -->
+    <div class="checklist-card checklist-card--coming-soon">
+        <div class="checklist-card__heading">
+            <span class="checklist-card__heading-icon">🧳</span>
+            Smart Travel Assistant
+        </div>
+        <p class="checklist-coming-soon">
+            Your personalised travel checklist will appear here in the next update.
+        </p>
+    </div>
+
+
+    <!-- =====================================================================
+         ACTIONS
+         ===================================================================== -->
+    <div class="confirmation-actions">
+        <a href="{{ url_for('index') }}" class="btn btn--secondary">
+            ← Book Another Flight
+        </a>
+        <button class="btn btn--primary" onclick="window.print()">
+            🖨 Print Confirmation
+        </button>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+# Flyora — Python dependencies
+# Install with: pip install -r requirements.txt
+#
+# Versions are pinned so the project installs identically on every machine
+# and on the deployment platform.
+
+# Web framework
+flask==3.0.3
+
+# Production WSGI server (used by Render / gunicorn-based platforms)
+gunicorn==22.0.0

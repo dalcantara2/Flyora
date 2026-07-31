@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Flyora{% endblock %}</title>
+
+    <!-- Favicon placeholder (replace with actual .ico in static/img/) -->
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon" />
+
+    <!-- Google Fonts — Inter for a clean, modern feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <!-- =====================================================================
+         NAVBAR
+         ===================================================================== -->
+    <header class="navbar">
+        <div class="navbar__inner container">
+
+            <!-- Brand / Logo -->
+            <a href="{{ url_for('index') }}" class="navbar__brand">
+                <span class="navbar__logo-icon">✈</span>
+                <span class="navbar__logo-text">Fly<strong>ora</strong></span>
+            </a>
+
+            <!-- Navigation links -->
+            <nav class="navbar__links">
+                <a href="{{ url_for('index') }}" class="navbar__link">Home</a>
+                <a href="{{ url_for('lookup') }}" class="navbar__link">My Booking</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         FLASH MESSAGES
+         Shown when routes use flash() to communicate status to the user.
+         ===================================================================== -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container container">
+                {% for category, message in messages %}
+                    <div class="flash flash--{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- =====================================================================
+         MAIN CONTENT
+         Each child template fills in the 'content' block.
+         ===================================================================== -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- =====================================================================
+         FOOTER
+         ===================================================================== -->
+    <footer class="footer">
+        <div class="footer__inner container">
+            <p class="footer__brand">✈ Fly<strong>ora</strong></p>
+            <p class="footer__tagline">Your journey starts here.</p>
+            <p class="footer__copy">&copy; 2025 Flyora. Built with Flask &amp; SQLite.</p>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
+
+</body>
+</html>

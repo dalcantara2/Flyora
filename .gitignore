@@ -1,0 +1,44 @@
+# =============================================================================
+# Flyora — .gitignore
+# =============================================================================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# --- Virtual environments ---
+venv/
+.venv/
+env/
+.env/
+
+# --- Environment variables (never commit secrets) ---
+.env
+.env.local
+.env.production
+
+# --- SQLite database ---
+# The .db file is auto-created and seeded on first run.
+# It should NOT be committed — it would cause merge conflicts
+# and would overwrite fresh data on every pull.
+database/skyroute.db
+
+# --- macOS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Logs ---
+*.log
