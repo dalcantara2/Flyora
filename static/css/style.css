@@ -89,16 +89,33 @@ html {
 }
 
 body {
-    font-family: "Inter", system-ui, -apple-system, sans-serif;
-    background-color: var(--color-off-white);
-    color: var(--color-text);
-    line-height: 1.6;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-family: "Nunito Sans", sans-serif;
 }
+
+h1,
+h2,
+h3,
+h4,
+.logo,
+.navbar-brand,
+button,
+.btn {
+    font-family: "Montserrat", sans-serif;
+}
+
+h1,
+h2 {
+    font-weight: 700;
+}
+
+h3,
+h4,
+button,
+.btn,
+.navbar-brand {
+    font-weight: 600;
+}
+
 
 main.main-content {
     flex: 1;
@@ -2174,3 +2191,197 @@ h1, h2, h3, h4 {
         width: 100%;
     }
 }
+
+
+/* =========================================
+   Flyora typography
+========================================= */
+
+body {
+    font-family: "Nunito Sans", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+.logo,
+.navbar-brand,
+button,
+.btn {
+    font-family: "Montserrat", sans-serif;
+}
+
+/* =========================================
+   Softer hero treatment
+========================================= */
+
+.hero {
+    position: relative;
+    overflow: visible;
+    background:
+        linear-gradient(
+            110deg,
+            rgba(10, 35, 73, 0.94),
+            rgba(34, 92, 164, 0.82)
+        ),
+        url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1800&q=85")
+        center / cover no-repeat;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(255, 255, 255, 0.15),
+            transparent 35%
+        );
+}
+
+.hero > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================================
+   Popular destinations
+========================================= */
+
+.destinations-section {
+    padding: 5rem 1.5rem;
+    background: #f7f9fd;
+}
+
+.section-heading {
+    max-width: 650px;
+    margin: 0 auto 2.25rem;
+    text-align: center;
+}
+
+.section-eyebrow {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    color: #cf8b25;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.section-heading h2 {
+    margin-bottom: 0.6rem;
+    color: #10213b;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+}
+
+.section-heading p {
+    color: #657188;
+    font-size: 1.05rem;
+}
+
+.destination-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.destination-card {
+    position: relative;
+    min-height: 330px;
+    overflow: hidden;
+    border-radius: 24px;
+    background-position: center;
+    background-size: cover;
+    box-shadow: 0 14px 34px rgba(17, 38, 70, 0.14);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.destination-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 22px 42px rgba(17, 38, 70, 0.2);
+}
+
+.destination-card__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.4rem;
+    color: white;
+    background:
+        linear-gradient(
+            to top,
+            rgba(5, 19, 42, 0.88),
+            rgba(5, 19, 42, 0.08) 65%
+        );
+}
+
+.destination-card__tag {
+    align-self: flex-start;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 999px;
+    background: rgba(5, 19, 42, 0.35);
+    font-size: 0.78rem;
+    font-weight: 700;
+    backdrop-filter: blur(8px);
+}
+
+.destination-card h3 {
+    margin: 0 0 0.2rem;
+    color: white;
+    font-size: 1.55rem;
+}
+
+.destination-card p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.88);
+    font-weight: 600;
+}
+
+.destination-new-york {
+    background-image: url("https://images.unsplash.com/photo-1522083165195-3424ed129620?auto=format&fit=crop&w=900&q=80");
+}
+
+.destination-miami {
+    background-image: url("https://images.unsplash.com/photo-1535498730771-e735b998cd64?auto=format&fit=crop&w=900&q=80");
+}
+
+.destination-london {
+    background-image: url("https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=900&q=80");
+}
+
+.destination-tokyo {
+    background-image: url("https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=900&q=80");
+}
+
+@media (max-width: 950px) {
+    .destination-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .destinations-section {
+        padding: 3.5rem 1rem;
+    }
+
+    .destination-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .destination-card {
+        min-height: 290px;
+    }
+}
+
